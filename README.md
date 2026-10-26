@@ -1,4 +1,4 @@
-# Rato e Queijo
+# Rato na Cozinha
 
 Jogo em Python com Pygame para a Prática 04 de Usabilidade, Desenvolvimento Web, Mobile e Jogos.
 
@@ -25,7 +25,7 @@ Se o Windows não reconhecer `python`, use `py` no primeiro comando.
 | R | Reiniciar e zerar os pontos |
 | Esc | Sair |
 
-O jogo não tem limite de tempo. Ao trocar de janela, ele pausa automaticamente.
+O cenário é uma cozinha com piso quadriculado, fogão e pia. Os móveis são só parte do cenário e ficam fora do espaço onde o rato anda. O jogo não tem limite de tempo. Ao trocar de janela, ele pausa automaticamente.
 
 ## Arquivos
 
@@ -33,7 +33,6 @@ O jogo não tem limite de tempo. Ao trocar de janela, ele pausa automaticamente.
 - `assets/`: imagens do rato e do queijo e licença de uso.
 - `requirements.txt`: versão do Pygame usada no projeto.
 - `test_jogo.py`: testes das regras do jogo.
-
 
 ## Testes
 
