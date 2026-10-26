@@ -4,6 +4,8 @@ from pathlib import Path
 
 os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
 import pygame
+from car import Obstaculo, mover_personagem
+from colision import Contato, colidiu
 
 LARGURA, ALTURA = 960, 680
 AREA = pygame.Rect(72, 172, 816, 400)
@@ -29,6 +31,10 @@ class Jogo:
         self.pausado = False
         self.olhando_direita = False
         self.aviso = 0
+        self.obstaculo = Obstaculo(AREA)
+        self.contato = Contato()
+        self.colisoes = 0
+        self.aviso_colisao = 0
         self.sortear_queijo()
 
     def sortear_queijo(self):
@@ -46,16 +52,16 @@ class Jogo:
         if self.pausado:
             return
         self.aviso = max(0, self.aviso - dt)
+        self.aviso_colisao = max(0, self.aviso_colisao - dt)
         vetor = pygame.Vector2(direcao)
-        if vetor.length_squared():
-            # Mantém a mesma velocidade na diagonal.
-            self.posicao += vetor.normalize() * VELOCIDADE * dt
-            if vetor.x:
-                self.olhando_direita = vetor.x > 0
-        self.posicao.x = max(AREA.left, min(self.posicao.x, AREA.right - self.rato.width))
-        self.posicao.y = max(AREA.top, min(self.posicao.y, AREA.bottom - self.rato.height))
-        self.rato.topleft = (round(self.posicao.x), round(self.posicao.y))
-        if self.rato.colliderect(self.queijo):
+        mover_personagem(self.posicao, self.rato, vetor, VELOCIDADE, dt, AREA)
+        if vetor.x:
+            self.olhando_direita = vetor.x > 0
+        self.obstaculo.atualizar(dt)
+        if self.contato.atualizar(self.rato, self.obstaculo.rect):
+            self.colisoes += 1
+            self.aviso_colisao = 0.8
+        if colidiu(self.rato, self.queijo):
             self.pontos += 1
             self.aviso = 0.8
             self.sortear_queijo()
@@ -139,14 +145,25 @@ class Tela:
         tela.blit(self.cenario, (0, 0))
         self.texto("RATO NA COZINHA", self.titulo, ESCURO, (29, 22))
         self.texto("RATO NA COZINHA", self.titulo, AMARELO, (26, 19))
-        self.texto("O jantar ficou por sua conta.", self.pequena, CREME, (28, 60))
+        self.texto("Pegue o queijo e desvie do bloco!", self.pequena, CREME, (28, 60))
+        self.texto("COLISÕES", self.pequena, CREME, (580, 18))
+        self.texto(f"{jogo.colisoes:03d}", self.titulo, CREME, (580, 35))
         self.texto("QUEIJOS", self.pequena, CREME, (751, 18))
         self.texto(f"{jogo.pontos:03d}", self.titulo, AMARELO, (748, 35))
         tela.blit(self.queijo, (855, 23))
         pygame.draw.ellipse(tela, (125, 132, 112), (jogo.queijo.x + 7, jogo.queijo.y + 34, 35, 10))
         tela.blit(self.queijo, jogo.queijo)
+        # Recorta o bloco na entrada e na saída da área de jogo.
+        tela.set_clip(AREA)
+        cor_bloco = (205, 57, 47) if jogo.contato.ativo else (49, 96, 76)
+        pygame.draw.rect(tela, cor_bloco, jogo.obstaculo.rect, border_radius=4)
+        pygame.draw.rect(tela, ESCURO, jogo.obstaculo.rect, 2, border_radius=4)
+        tela.set_clip(None)
         pygame.draw.ellipse(tela, (125, 132, 112), (jogo.rato.x + 8, jogo.rato.y + 44, 47, 11))
         tela.blit(self.rato_direita if jogo.olhando_direita else self.rato, jogo.rato)
+        if jogo.aviso_colisao:
+            pygame.draw.rect(tela, (205, 57, 47), jogo.rato, 3, border_radius=6)
+            self.texto("Colisão! Desvie do bloco.", self.normal, AMARELO, (480, 594), True)
         if jogo.pontos > self.ultimo_ponto:
             self.coleta = jogo.rato.center
         self.ultimo_ponto = jogo.pontos

@@ -5,6 +5,45 @@ from main import AREA, Jogo, VELOCIDADE
 
 
 class TestJogo(unittest.TestCase):
+    def test_colisao_conta_apenas_entrada_inclusive_contencao(self):
+        jogo = Jogo()
+        jogo.obstaculo.rect = jogo.rato.inflate(20, 20)
+        jogo.obstaculo.y = float(jogo.obstaculo.rect.y)
+        jogo.atualizar((0, 0), 0)
+        jogo.atualizar((0, 0), 0)
+        self.assertEqual(jogo.colisoes, 1)
+        self.assertTrue(jogo.contato.ativo)
+        self.assertGreater(jogo.aviso_colisao, 0)
+        jogo.obstaculo.reiniciar()
+        jogo.atualizar((0, 0), 0)
+        self.assertFalse(jogo.contato.ativo)
+        jogo.obstaculo.rect.center = jogo.rato.center
+        jogo.obstaculo.y = float(jogo.obstaculo.rect.y)
+        jogo.atualizar((0, 0), 0)
+        self.assertEqual(jogo.colisoes, 2)
+
+    def test_obstaculo_move_reaparece_e_pausa(self):
+        jogo = Jogo()
+        bloco = jogo.obstaculo
+        inicio = bloco.y
+        jogo.atualizar((0, 0), 0.1)
+        self.assertAlmostEqual(bloco.y - inicio, bloco.velocidade * 0.1)
+        jogo.pausado = True
+        anterior = bloco.rect.copy()
+        jogo.atualizar((0, 0), 1)
+        self.assertEqual(bloco.rect, anterior)
+        jogo.pausado = False
+        bloco.y = float(AREA.bottom)
+        jogo.atualizar((0, 0), 0)
+        self.assertEqual(bloco.rect.bottom, AREA.top)
+        self.assertGreaterEqual(bloco.rect.left, AREA.left)
+        self.assertLessEqual(bloco.rect.right, AREA.right)
+        jogo.colisoes = 5
+        jogo.reiniciar()
+        self.assertEqual(jogo.colisoes, 0)
+        self.assertFalse(jogo.contato.ativo)
+        self.assertEqual(jogo.aviso_colisao, 0)
+
     def test_queijo_dentro_do_campo_e_fora_do_rato(self):
         jogo = Jogo()
         for _ in range(500):
