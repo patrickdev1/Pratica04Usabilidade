@@ -1,5 +1,3 @@
-"""Prática 04 — rato em busca do queijo, usando Pygame."""
-
 import os
 import random
 from pathlib import Path
@@ -11,7 +9,7 @@ LARGURA, ALTURA = 960, 680
 AREA = pygame.Rect(32, 130, 896, 474)
 TAMANHO_RATO = 64
 TAMANHO_QUEIJO = 48
-VELOCIDADE = 280  # Pixels por segundo, independentemente do FPS.
+VELOCIDADE = 280  # pixels por segundo
 ASSETS = Path(__file__).resolve().parent / "assets"
 FUNDO = (247, 242, 229)
 TEXTO = (47, 61, 49)
@@ -34,7 +32,6 @@ class Jogo:
         self.sortear_queijo()
 
     def sortear_queijo(self):
-        """Mantém o queijo na arena, longe do rato e da posição anterior."""
         anterior = self.queijo.copy()
         while True:
             self.queijo.topleft = (
@@ -51,7 +48,7 @@ class Jogo:
         self.aviso = max(0, self.aviso - dt)
         vetor = pygame.Vector2(direcao)
         if vetor.length_squared():
-            # Evita que o movimento diagonal seja mais rápido.
+            # Mantém a mesma velocidade na diagonal.
             self.posicao += vetor.normalize() * VELOCIDADE * dt
             if vetor.x:
                 self.olhando_direita = vetor.x > 0
@@ -85,11 +82,10 @@ class Tela:
         tela = self.superficie
         tela.fill(FUNDO)
         self.texto("Rato & Queijo", self.titulo, TEXTO, (32, 24))
-        self.texto("Siga o aroma. Encontre o próximo queijo!", self.normal, VERDE, (34, 77))
+        self.texto("Use as setas para pegar o queijo.", self.normal, VERDE, (34, 77))
         pygame.draw.rect(tela, VERDE, (738, 30, 190, 66), border_radius=16)
         self.texto(f"Queijos: {jogo.pontos:02d}", self.normal, (255, 255, 255), (833, 63), True)
         pygame.draw.rect(tela, (224, 231, 209), AREA, border_radius=18)
-        # Pequenos pontos deixam o campo legível sem competir com os sprites.
         for x in range(56, AREA.right - 12, 32):
             for y in range(154, AREA.bottom - 12, 32):
                 pygame.draw.circle(tela, (202, 214, 186), (x, y), 2)
@@ -104,7 +100,7 @@ class Tela:
             sombra = pygame.Surface(AREA.size, pygame.SRCALPHA)
             sombra.fill((35, 48, 36, 170))
             tela.blit(sombra, AREA)
-            self.texto("Pausa para um lanchinho", self.titulo, FUNDO, (480, 335), True)
+            self.texto("Jogo pausado", self.titulo, FUNDO, (480, 335), True)
             self.texto("Pressione ESPAÇO para continuar", self.normal, FUNDO, (480, 385), True)
 
 

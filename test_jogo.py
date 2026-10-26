@@ -1,4 +1,3 @@
-"""Testes das regras sem abrir uma janela."""
 import unittest
 
 import pygame

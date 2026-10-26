@@ -1,10 +1,12 @@
-# Rato & Queijo 🐭🧀
+# Rato e Queijo
 
-Jogo da Prática 04 de Usabilidade, Desenvolvimento Web, Mobile e Jogos, feito em Python com Pygame. Guie o rato até o queijo: cada colisão soma um ponto e faz o queijo reaparecer em outro lugar aleatório.
+Jogo em Python com Pygame para a Prática 04 de Usabilidade, Desenvolvimento Web, Mobile e Jogos.
 
-## Executar no Windows
+O objetivo é mover o rato até o queijo usando as setas do teclado. Quando o rato encosta no queijo, ganha um ponto e o queijo aparece em outra posição aleatória.
 
-Instale Python 3.10 ou superior. Dentro da pasta do projeto, execute no PowerShell:
+## Como jogar
+
+Com Python 3.10 ou superior instalado, abra o PowerShell na pasta do projeto e execute:
 
 ```powershell
 python -m venv .venv
@@ -12,7 +14,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py
 ```
 
-Não é necessário ativar o ambiente virtual. Se o comando `python` não estiver disponível, tente `py` no primeiro comando.
+Se o Windows não reconhecer `python`, use `py` no primeiro comando.
 
 ## Controles
 
@@ -23,18 +25,15 @@ Não é necessário ativar o ambiente virtual. Se o comando `python` não estive
 | R | Reiniciar e zerar os pontos |
 | Esc | Sair |
 
-O rato fica dentro do campo. O queijo sempre surge inteiramente no campo e fora do rato. Ao trocar de janela, o jogo pausa automaticamente. Não há limite de tempo nem condição de derrota.
+O jogo não tem limite de tempo. Ao trocar de janela, ele pausa automaticamente.
 
-## Organização e conceitos
+## Arquivos
 
-- `main.py`: estado do jogo (`Jogo`), desenhos (`Tela`) e loop principal (`main`).
-- `assets/`: sprites incluídos; o jogo funciona sem internet após a instalação.
-- `requirements.txt`: dependência do projeto.
-- `test_jogo.py`: testes de movimento, colisão, limites, pausa e reinício.
+- `main.py`: código do jogo.
+- `assets/`: imagens do rato e do queijo e licença de uso.
+- `requirements.txt`: versão do Pygame usada no projeto.
+- `test_jogo.py`: testes das regras do jogo.
 
-O loop trata eventos, atualiza posições e desenha a tela a 60 FPS. O movimento usa `pygame.key.get_pressed`, `Vector2` e tempo entre quadros. A coleta usa `Rect.colliderect`; o reposicionamento usa `random.randint`.
-
-O requisito corresponde à atividade da página 40 do material `Encontro_06_Jogos_02_Pygame_UDWMJ.pdf`. Os arquivos `car.py` e `colision.py` mencionados no material não vieram anexados; esta implementação é independente, utilizando os conceitos apresentados na aula.
 
 ## Testes
 
@@ -42,11 +41,11 @@ O requisito corresponde à atividade da página 40 do material `Encontro_06_Jogo
 .\.venv\Scripts\python.exe -m unittest -v
 ```
 
-## Créditos dos sprites
+## Imagens
 
-Imagens do projeto [Twemoji](https://github.com/twitter/twemoji), copyright Twitter, Inc. e colaboradores, sob [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). A licença completa está em `assets/LICENSE-GRAPHICS`.
+As imagens são do [Twemoji](https://github.com/twitter/twemoji), de Twitter, Inc. e colaboradores, e usam a licença [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Uma cópia da licença está em `assets/LICENSE-GRAPHICS`.
 
 - [Rato, versão 14.0.2](https://raw.githubusercontent.com/twitter/twemoji/v14.0.2/assets/72x72/1f401.png)
 - [Queijo, versão 14.0.2](https://raw.githubusercontent.com/twitter/twemoji/v14.0.2/assets/72x72/1f9c0.png)
 
-Os arquivos originais estão incluídos sem alteração; durante o jogo são redimensionados e o rato pode ser espelhado.
+As imagens são redimensionadas no jogo, e o rato é espelhado quando muda de direção.
